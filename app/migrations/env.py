@@ -19,6 +19,16 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# If the application exposes a DB URL in `app.config`, use it to override
+# the `sqlalchemy.url` from alembic.ini so sensitive credentials don't live
+# in the ini file.
+try:
+    from app.config import PG_DATABASE_URL as _pg_url
+except Exception:
+    _pg_url = None
+if _pg_url:
+    config.set_main_option("sqlalchemy.url", _pg_url)
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel

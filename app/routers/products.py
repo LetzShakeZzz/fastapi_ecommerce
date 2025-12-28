@@ -9,8 +9,6 @@ from app.models.users import User as UserModel
 from app.auth import get_current_seller
 
 
-
-# Создаём маршрутизатор для товаров
 router = APIRouter(
     prefix="/products",
     tags=["products"],

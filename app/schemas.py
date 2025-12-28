@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from decimal import Decimal
+from datetime import datetime
 
 
 class CategoryCreate(BaseModel):
@@ -52,7 +53,34 @@ class Product(BaseModel):
     image_url: str | None = Field(None, description="URL изображения товара")
     stock: int = Field(description="Количество товара на складе")
     category_id: int = Field(description="ID категории")
+    seller_id: int = Field(description="ID продавца")
     is_active: bool = Field(description="Активность товара")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ReviewCreate(BaseModel):
+    """
+    Модель для создания и обновления отзыва.
+    Используется в POST и PUT запросах.
+    """
+    comment: str | None = Field(None, description="Текст отзыва")
+    grade: int = Field(gt=0, le=5, description="Оценка отзыва")
+    product_id: int = Field(description="ID категории")
+
+
+class Review(BaseModel):
+    """
+    Модель для ответа с данными отзыва.
+    Используется в GET-запросах.
+    """
+    id: int = Field(description="Уникальный идентификатор отзыва")
+    comment: str | None = Field(None, description="Текст отзыва")
+    comment_date: datetime = Field(description="Дата и время создания отзыва")
+    grade: int = Field(gt=0, le=5, description="Оценка отзыва")
+    product_id: int = Field(description="ID продукта")
+    user_id: int = Field(description="ID пользователя")
+    is_active: bool = Field(description="Активность отзыва")
 
     model_config = ConfigDict(from_attributes=True)
 

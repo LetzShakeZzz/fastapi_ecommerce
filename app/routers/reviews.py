@@ -71,7 +71,7 @@ async def update_product(
 
     if not review:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found or inactive")
-    if review.user_id != current_user.id:
+    if review.user_id != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only delete your own reviews")
     await db.execute(
         update(ReviewModel).where(ReviewModel.id == review_id).values(is_active=False)

@@ -160,7 +160,7 @@ async def delete_product(
     product = result.first()
     if not product:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found or inactive")
-    if product.seller_id != current_user.id:
+    if product.seller_id != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only delete your own products")
     await db.execute(
         update(ProductModel).where(ProductModel.id == product_id).values(is_active=False)
